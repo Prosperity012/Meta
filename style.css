@@ -1,0 +1,143 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-image: url(techbackground.png);
+    background-size: cover;
+}
+
+.container {
+    background-color: white;
+    width: 450px;
+    padding: 1.5rem;
+    margin: 50px auto;
+    border-radius: 10px;
+    box-shadow: 0 0 50px rgb(114, 114, 114);
+    font-family: Arial, Helvetica, sans-serif;}
+    
+form {
+    margin: 0 2rem;}
+
+.form-title {
+    font-weight: bold;
+    text-align: left;
+    padding: 1.3rem;
+    margin-bottom: 0.4rem;}
+
+input {
+    color: inherit;
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid black;
+    padding-left: 1.5rem;
+}
+.input-group {
+    padding: 1% 0;
+    position: relative;
+}
+.input-group i{
+    position: absolute;
+    color: black;
+}
+input:focus{
+    background-color: transparent;
+    outline: transparent;
+    border-bottom: 2px solid rgb(118, 193, 255);
+}
+input::placeholder {
+    color: transparent;
+}
+label {
+    color: rgb(106, 106, 106);
+    position: relative;
+    left: 1.2em;
+    top: -1.3em;
+    cursor: auto;
+    transition: 0.2s ease all;
+}
+input:focus~label, input:not(:placeholder-shown)~label {
+    top: -3em;
+    color: rgb(0, 0, 0);
+    font-size: 0.9rem;
+}
+.recover {
+    text-align: right;
+    margin-bottom: 1rem;
+    font-size: 0.8rem;
+}
+.recover a{
+    text-decoration: none;
+    color: rgb(49, 49, 49);
+}
+.recover a:hover{
+    color: rgb(0, 4, 255);
+    text-decoration: wavy;
+}
+.btn {
+    padding: 8px 0;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    width: 100%;
+    background: rgb(202, 235, 255);
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    transition: 0.5s;
+}
+.btn:hover{
+    background: rgb(129, 202, 255);
+    color: rgb(0, 0, 0);
+}
+.or{
+    font-size: 1rem;
+    margin-top: 0.5;
+    text-align: center;
+}
+.icons{
+    text-align: center;
+}
+.icons i{
+    color: rgb(159, 201, 255);
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border: 2px solid rgb(238, 253, 255);
+    margin: 0 15px;
+    transition: 0.8s;
+}
+.icons i:hover{
+    background: rgba(0, 31, 51, 0.56);
+}
+.links{
+    display: flex;
+    justify-content: space-around;
+    padding: 0 4rem;
+    margin-top: 0.8rem;
+    font-weight: bold;
+}
+button{
+    color: rgb(129, 202, 255);
+    border: none;
+    background-color: transparent;
+    font-size: 1rem;
+    font-weight: bold;
+}
+button:hover{
+    text-decoration: wavy;
+    color: rgb(0, 147, 252);
+}
+button a{
+    color: rgb(129, 202, 255);
+    border: none;
+    background-color: transparent;
+    font-size: 0.5rem;
+    text-decoration: solid;
+}
+button a:hover{
+    text-decoration: wavy;
+    color: rgb(0, 147, 252);
+}
