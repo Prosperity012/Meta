@@ -1,0 +1,189 @@
+<?php
+session_start();
+include("connect.php");
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Meta</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header>
+    <div class="logo"></div>
+    <nav>
+        <p>
+        <a href="homepage.php">Home</a>
+        <strong>- Shop -</strong>
+        <a href="About.php">About</a>
+        <a href="Contact.php">Contact</a>
+        <a href="profile.php">Profile</a>
+        <a href="logout.php">Logout</a>
+        </p>
+    </nav>
+    
+    <div class="search-bar">
+        <input type="text" placeholder="Search for Meta products" id="searchInput" onkeyup="showSuggestions()">
+        <div class="search-suggestions" id="searchSuggestions"></div>
+    </div>
+</header>
+
+<main class="shopping-section">
+    <div class="product-list" id="productList">
+        <section class="featured-products">
+            <h1>Shop for products</h1>
+            <div class="product-list">
+                <div class="product" align="center">
+                    <img src="images/product1.png" alt="Product 1" sizes="50px"><br/>
+                    <h3>Virtual Reality Glasses</h3>
+                    <p>Immerse yourself in a new reality with our lightweight and affordable Virtual Reality Glasses, perfect for beginners.</p>
+                    <p>Price: R 3,780</p><br/>
+                    <button onclick="addToCart(1)">Add to Cart</button>
+                </div>
+                <div class="product" align="center">
+                    <img src="images/product2.png" alt="Product 2" sizes="50px"><br/>
+                    <h3>Meta Quest 3 VR Headsets</h3>
+                    <p>Step into the future with the Meta Quest 3 VR Headsets, offering top-of-the-line visuals and comfort for serious gamers.</p>
+                    <p>Price: R 6,000</p><br/>
+                    <button onclick="addToCart(2)">Add to Cart</button>
+                </div>
+                <div class="product" align="center">
+                    <img src="images/product3.png" alt="Product 3" sizes="50px"><br/>
+                    <h3>Meta Desktop Speakers</h3>
+                    <p>Enhance your audio experience with our High Quality Desktop Speakers, delivering rich and immersive sound for your home or office.</p>
+                    <p>Price: R 2,500</p><br/>
+                    <button onclick="addToCart(3)">Add to Cart</button>
+                </div>
+                <div class="product" align="center">
+                    <img src="images/product4.png" alt="Product 4" sizes="50px"><br/>
+                    <h3>Meta Oculus Quest 2 VR Headsets</h3>
+                    <p>Enjoy seamless virtual experiences with our VR Headsets, designed for comfort and high performance.</p>
+                    <p>Price: R 3,400</p><br/>
+                    <button onclick="addToCart(4)">Add to Cart</button>
+                </div>
+                <div class="product" align="center">
+                    <img src="images/product5.png" alt="Product 5" sizes="50px"><br/>
+                    <h3>Meta Earphones Wireless</h3>
+                    <p>Experience true freedom with our Wireless Meta Earphones, featuring superior sound quality and long battery life.</p>
+                    <p>Price: R 850</p><br/>
+                    <button onclick="addToCart(5)">Add to Cart</button>
+                </div>
+                <div class="product" align="center">
+                    <img src="images/product6.png" alt="Product 6" sizes="50px"><br/>
+                    <h3>Meta Smartwatch</h3>
+                    <p>Stay connected and track your fitness goals with our versatile Smartwatch, combining style and functionality.</p>
+                    <p>Price: R 2,200</p><br/>
+                    <button onclick="addToCart(6)">Add to Cart</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="cart">
+    <h2>Shopping Cart</h2>
+    <div class="table-section">
+        <table id="cartTable">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Cart items will be dynamically inserted here -->
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2">Total</td>
+                    <td id="cartTotal">R0.00</td>
+                </tr>
+            </tfoot>
+        </table>
+        <button onclick="checkout()">Checkout</button>
+    </div>
+</div>
+
+
+</main>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        let cart = [];
+
+        function addToCart(productId) {
+            $.ajax({
+                url: 'add_cart.php', // The PHP file that fetches the item from the database
+                type: 'GET',
+                data: { id: productId },
+                success: function(response) {
+                    try {
+                        const item = JSON.parse(response);
+                        if (item.error) {
+                            alert('Error: ' + item.error);
+                            return;
+                        }
+
+                        const existingItem = cart.find(cartItem => cartItem.id === item.id);
+
+                        if (existingItem) {
+                            existingItem.quantity += 1;
+                        } else {
+                            item.quantity = 1;
+                            cart.push(item);
+                        }
+                        displayCart();
+                    } catch (e) {
+                        console.error('Error parsing response:', e);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error);
+                }
+            });
+        }
+
+        function removeFromCart(productId) {
+            const itemIndex = cart.findIndex(cartItem => cartItem.id == productId);
+            if (itemIndex > -1) {
+                cart[itemIndex].quantity -= 1;
+                if (cart[itemIndex].quantity <= 0) {
+                    cart.splice(itemIndex, 1);
+                }
+                displayCart();
+            }
+        }
+
+        function displayCart() {
+            const cartTableBody = document.querySelector('#cartTable tbody');
+            cartTableBody.innerHTML = '';
+
+            let total = 0;
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                const row = `
+                    <tr>
+                        <td>${item.name} (${item.quantity})</td>
+                        <td>R${item.price}</td>
+                        <td><button onclick="removeFromCart(${item.id})">Remove</button></td>
+                    </tr>
+                `;
+                cartTableBody.innerHTML += row;
+            });
+
+            document.getElementById('cartTotal').innerText = `R${total.toFixed(2)}`;
+        }
+
+        function checkout() {
+            sessionStorage.setItem('cart', JSON.stringify(cart));
+            window.location.href = 'checkout.php';
+            }
+    </script>
+
+</body>
+</html>
